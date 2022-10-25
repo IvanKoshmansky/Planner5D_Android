@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_primary">#69f0ae</color>
+    <!--    этот цвет используется для системного трея над экшн баром-->
+    <color name="color_primary_dark">#2bbd7e</color>
+    <color name="color_secondary">#A5F290</color>
+    <color name="color_accent">#F290D6</color>
+    <color name="color_on_primary">#000000</color>
+    <color name="color_on_secondary">#000000</color>
+</resources>

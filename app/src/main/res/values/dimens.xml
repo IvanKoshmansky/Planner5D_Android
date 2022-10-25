@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    All components align to an 8dp square baseline grid for mobile, tablet, and desktop.-->
+    <dimen name="standard_grid">8dp</dimen>
+    <!--    Icons, type, and some elements within components can align to a 4dp grid.-->
+    <dimen name="small_grid">4dp</dimen>
+    <!--    марджины по бокам экрана-->
+    <dimen name="margin_width">8dp</dimen>
+    <!--    размер "желобов" (разделителей условных колонок) по вертикали-->
+    <dimen name="gutter_width">16dp</dimen>
+    <!--    размер "желоба" + стандартное смещение сетки 8dp-->
+    <dimen name="gutter_plus_standard_grid">12dp</dimen>
+    <!--    два размера стандартной сетки-->
+    <dimen name="standard_grid_2x">16dp</dimen>
+    <!--    три размера стандартной сетки-->
+    <dimen name="standard_grid_3x">24dp</dimen>
+    <!--    четыре размера стандартной сетки-->
+    <dimen name="standard_grid_4x">32dp</dimen>
+    <!--    пять размеров стандартной сетки-->
+    <dimen name="standard_grid_5x">40dp</dimen>
+    <!--    размер иконки стандартный-->
+    <dimen name="icon_size">48dp</dimen>
+    <!--    высота карточки-->
+    <dimen name="card_height">160dp</dimen>
+    <!--    подъем карточки над фоном для имитации тени-->
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="card_margin">4dp</dimen>
+    <dimen name="content_padding">4dp</dimen>
+    <!--    элемент списка членов экипажа-->
+    <dimen name="crew_member_card_height">88dp</dimen>
+    <dimen name="crew_member_card_elevation">2dp</dimen>
+    <dimen name="crew_member_card_margin">2dp</dimen>
+    <!--    margin для FAB, находящихся в правом нижнем углу-->
+    <dimen name="fab_margin">16dp</dimen>
+</resources>

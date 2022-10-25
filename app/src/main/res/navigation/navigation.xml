@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/galleryFragment">
+
+    <fragment
+        android:id="@+id/galleryFragment"
+        android:name="com.example.android.planner5d.main.GalleryFragment"
+        android:label="@string/fragment_gallery_header"
+        tools:layout="@layout/fragment_gallery">
+        <action
+            android:id="@+id/action_galleryFragment_to_groundFloorFragment"
+            app:destination="@id/groundFloorFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/groundFloorFragment"
+        android:name="com.example.android.planner5d.main.GroundFloorFragment"
+        android:label="@string/fragment_ground_floor_header"
+        tools:layout="@layout/fragment_ground_floor" />
+</navigation>

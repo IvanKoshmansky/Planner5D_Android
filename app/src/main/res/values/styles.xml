@@ -1,0 +1,99 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!--    https://material.io/design/color/the-color-system.html#tools-for-picking-colors -->
+    <style name="Theme.Planner5D" parent="Theme.MaterialComponents.Light">
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorSecondary">@color/color_secondary</item>
+        <item name="colorAccent">@color/color_accent</item>
+        <item name="colorOnPrimary">@color/color_on_primary</item>
+        <item name="colorOnSecondary">@color/color_on_secondary</item>
+    </style>
+    <!--    https://material.io/design/typography/the-type-system.html#type-scale -->
+    <style name="TextAppearance.MdcTypographyStyles.Headline1" parent="TextAppearance.MaterialComponents.Headline1">
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">96sp</item>
+    </style>
+    <style name="TextAppearance.MdcTypographyStyles.Headline2" parent="TextAppearance.MaterialComponents.Headline2">
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">60sp</item>
+    </style>
+    <style name="TextAppearance.MdcTypographyStyles.Headline3" parent="TextAppearance.MaterialComponents.Headline3">
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">48sp</item>
+    </style>
+    <style name="TextAppearance.MdcTypographyStyles.Headline4" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">34sp</item>
+    </style>
+    <style name="TextAppearance.MdcTypographyStyles.Headline5" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+    <style name="TextAppearance.MdcTypographyStyles.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">20sp</item>
+        <!--        привязки baseline к сетке 8dp (4dp) будут поддерживаться только для версии API28 и выше-->
+        <item name="android:firstBaselineToTopHeight" tools:targetApi="P">@dimen/standard_grid_3x</item>
+        <item name="android:lastBaselineToBottomHeight" tools:targetApi="P">@dimen/standard_grid</item>
+        <item name="android:lineHeight" tools:targetApi="P">@dimen/standard_grid_3x</item>
+    </style>
+    <style name="TextAppearance.MdcTypographyStyles.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:firstBaselineToTopHeight" tools:targetApi="P">@dimen/standard_grid_3x</item>
+        <item name="android:lastBaselineToBottomHeight" tools:targetApi="P">@dimen/standard_grid</item>
+        <item name="android:lineHeight" tools:targetApi="P">@dimen/standard_grid_2x</item>
+    </style>
+    <style name="TextAppearance.MdcTypographyStyles.Subtitle2" parent="TextAppearance.MaterialComponents.Subtitle2">
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:firstBaselineToTopHeight" tools:targetApi="P">@dimen/standard_grid_2x</item>
+        <item name="android:lastBaselineToBottomHeight" tools:targetApi="P">@dimen/small_grid</item>
+        <item name="android:lineHeight" tools:targetApi="P">@dimen/standard_grid_2x</item>
+    </style>
+    <style name="TextAppearance.MdcTypographyStyles.Body1" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="TextAppearance.MdcTypographyStyles.Body2" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:firstBaselineToTopHeight" tools:targetApi="P">@dimen/standard_grid_2x</item>
+        <item name="android:lastBaselineToBottomHeight" tools:targetApi="P">@dimen/small_grid</item>
+        <item name="android:lineHeight" tools:targetApi="P">@dimen/standard_grid_2x</item>
+    </style>
+    <style name="TextAppearance.MdcTypographyStyles.Button" parent="TextAppearance.MaterialComponents.Button">
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="TextAppearance.MdcTypographyStyles.Caption" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+    <style name="TextAppearance.MdcTypographyStyles.Overline" parent="TextAppearance.MaterialComponents.Overline">
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+    <!--    цвет шрифта, margin и spacing задается для каждого текстового блока индивидуально-->
+    <!--    android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Body2"-->
+    <!--    android:textColor="@color/color_on_primary"-->
+    <!--    textAppearance - это по сути тот же стиль, но с атрибутами только для текста-->
+    <!--    применение в стиле для текста атрибутов firstBaselineToTopHeight,-->
+    <!--    lastBaselineToBottomToBottomHeight,-->
+    <!--    lineHeight - для многострочного текста,-->
+    <!--    позволит автоматически получить подстройку baseline под сетку 4dp причем верстать дизайн-->
+    <!--    можно будет по-старому, то есть через ConstraintLayout в любых вариантах ограничений-->
+</resources>

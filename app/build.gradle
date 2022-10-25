@@ -1,0 +1,90 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: "androidx.navigation.safeargs"
+apply plugin: 'kotlin-parcelize'
+
+android {
+    compileSdkVersion 32
+    defaultConfig {
+        applicationId "com.example.android.planner5d"
+        minSdkVersion 21
+        targetSdkVersion 32
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"
+
+    // Material Design Components
+    implementation "com.google.android.material:material:$version_material"
+
+    // Constraint Layout
+    implementation "androidx.constraintlayout:constraintlayout:$version_constraint_layout"
+
+    // Support libraries
+    implementation "androidx.appcompat:appcompat:$version_appcompat"
+
+    // Android KTX
+    implementation "androidx.core:core-ktx:1.8.0"          // общее
+    implementation "androidx.fragment:fragment-ktx:1.4.1"  // для by viewModels во фрагментах
+
+    // Room and Lifecycle dependencies
+    implementation "androidx.room:room-runtime:2.4.2"
+    kapt "androidx.room:room-compiler:$version_room"
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
+
+    // Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version_coroutine"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_coroutine"
+
+    // Navigation
+    implementation "android.arch.navigation:navigation-fragment-ktx:1.0.0"
+    implementation "android.arch.navigation:navigation-ui-ktx:1.0.0"
+
+    // Retrofit for networking
+    implementation "com.squareup.retrofit2:retrofit:$version_retrofit"
+    implementation "com.squareup.retrofit2:converter-moshi:$version_retrofit"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$version_retrofit_coroutines_adapter"
+
+    // Moshi for parsing the JSON format
+    implementation "com.squareup.moshi:moshi:$version_moshi"
+    implementation "com.squareup.moshi:moshi-kotlin:$version_moshi"
+
+    // Logging
+    implementation "com.jakewharton.timber:timber:$version_timber"
+
+    // Coil for images
+    implementation "io.coil-kt:coil:2.0.0-rc03"
+
+    // Hilt
+    implementation "com.google.dagger:hilt-android:$version_hilt"
+    kapt "com.google.dagger:hilt-compiler:$version_hilt"
+    // для поддержки Scope ViewModel в NavGraph, т.е. несколько фрагментов получают ссылку на одну
+    // и ту же вью модел на все Destinations (разделяют ViewModel)
+    implementation 'androidx.hilt:hilt-navigation-fragment:1.0.0'
+
+    // Viewpaging
+    implementation "androidx.paging:paging-runtime-ktx:$version_paging"
+}
+
+kapt {
+    correctErrorTypes true
+}

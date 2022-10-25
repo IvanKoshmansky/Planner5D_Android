@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Planner5D</string>
+    <string name="fragment_gallery_header">Галерея</string>
+    <string name="fragment_ground_floor_header">План первого этажа</string>
+</resources>
