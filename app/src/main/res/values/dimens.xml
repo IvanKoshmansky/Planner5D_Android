@@ -21,7 +21,7 @@
     <!--    размер иконки стандартный-->
     <dimen name="icon_size">48dp</dimen>
     <!--    высота карточки-->
-    <dimen name="card_height">160dp</dimen>
+    <dimen name="card_height">200dp</dimen>
     <!--    подъем карточки над фоном для имитации тени-->
     <dimen name="card_elevation">4dp</dimen>
     <dimen name="card_margin">4dp</dimen>
@@ -32,4 +32,7 @@
     <dimen name="crew_member_card_margin">2dp</dimen>
     <!--    margin для FAB, находящихся в правом нижнем углу-->
     <dimen name="fab_margin">16dp</dimen>
+    <!--    размер логотипа проекта -->
+    <dimen name="logo_width">250dp</dimen>
+    <dimen name="logo_height">90dp</dimen>
 </resources>

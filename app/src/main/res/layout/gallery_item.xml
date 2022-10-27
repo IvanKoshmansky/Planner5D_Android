@@ -32,7 +32,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/standard_grid"
-                android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Headline6"
+                android:gravity="center"
+                android:padding="@dimen/small_grid"
+                android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Subtitle1"
                 android:textColor="@color/color_on_primary"
                 app:firstBaselineToTopHeight="@dimen/standard_grid_3x"
                 app:lastBaselineToBottomHeight="@dimen/standard_grid"
@@ -43,6 +45,38 @@
                 tools:text="Название проекта Planner 5D"
                 android:text="@{item.name}"/>
 
+            <ImageView
+                android:id="@+id/iw_project_logo"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/margin_width"
+                android:layout_marginBottom="@dimen/margin_width"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toTopOf="@+id/tw_cdate"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tw_project_name_id"
+                app:loadFromUrl="@{item.img}"
+                tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tw_cdate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/standard_grid"
+                android:padding="@dimen/small_grid"
+                android:gravity="end"
+                android:text="@{item.cdate}"
+                android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Body2"
+                android:textColor="@color/color_on_primary"
+                app:firstBaselineToTopHeight="@dimen/standard_grid_2x"
+                app:lastBaselineToBottomHeight="@dimen/standard_grid"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:lineHeight="@dimen/standard_grid_3x"
+                tools:text="Дата обновления проекта" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
