@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/groundFloorFragment"
-        android:name="com.example.android.planner5d.main.GroundFloorFragment"
+        android:name="com.example.android.planner5d.main.FloorFragment"
         android:label="@string/fragment_ground_floor_header"
-        tools:layout="@layout/fragment_ground_floor" />
+        tools:layout="@layout/fragment_floor" />
 </navigation>

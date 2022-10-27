@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="item"
+            type="com.example.android.planner5d.models.PlannerProject" />
+        <variable
+            name="clickListener"
+            type="com.example.android.planner5d.main.viewpaging.GalleryClickListener" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_margin="@dimen/card_margin"
+        app:cardElevation="@dimen/card_elevation"
+        app:contentPadding="@dimen/content_padding">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/card_height">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tw_project_name_id"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/standard_grid"
+                android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Headline6"
+                android:textColor="@color/color_on_primary"
+                app:firstBaselineToTopHeight="@dimen/standard_grid_3x"
+                app:lastBaselineToBottomHeight="@dimen/standard_grid"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lineHeight="@dimen/standard_grid_3x"
+                tools:text="Название проекта Planner 5D"
+                android:text="@{item.name}"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

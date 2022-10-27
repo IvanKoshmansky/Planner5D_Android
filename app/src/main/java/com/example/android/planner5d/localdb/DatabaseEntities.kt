@@ -38,7 +38,7 @@ fun List<DBPlannerProject>.asDomainModel() = map {
     PlannerProjectPaging(
         name = it.name,
         cdate = it.cdate,
-        key = it.key,
+        key = it.key ?: "",
         img = it.img,
         page = it.page,
         pages = it.pages

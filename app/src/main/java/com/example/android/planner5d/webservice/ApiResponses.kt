@@ -10,7 +10,7 @@ import com.example.android.planner5d.models.PlannerProjectPaging
 data class ApiPlannerProjectItem (
     val name: String?,   // имя проекта
     val cdate: String?,  // дата обновления проекта
-    val key: String?,    // идентификатор проекта
+    val key: String,     // идентификатор проекта
     val img: String?     // ссылка на изображение в галерее
 )
 

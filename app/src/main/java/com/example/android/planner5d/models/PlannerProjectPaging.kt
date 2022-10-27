@@ -5,7 +5,7 @@ import com.example.android.planner5d.localdb.DBPlannerProject
 data class PlannerProjectPaging (
     val name: String?,   // имя проекта
     val cdate: String?,  // дата обновления проекта
-    val key: String?,    // идентификатор проекта
+    val key: String,     // идентификатор проекта
     val img: String?,    // ссылка на изображение в галерее
     val page: Int,       // номер страницы (поддержка пагинации)
     val pages: Int       // общее количество страниц
@@ -25,4 +25,3 @@ fun List<PlannerProjectPaging>.asDatabaseModel() = map {
 fun List<PlannerProjectPaging>.asViewModel() = map {
     PlannerProject(it.name, it.cdate, it.key, it.img)
 }
-

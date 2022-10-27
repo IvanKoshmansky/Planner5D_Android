@@ -3,13 +3,13 @@ package com.example.android.planner5d.webservice
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import kotlinx.coroutines.Deferred
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 private const val BASE_URL = "https://planner5d.com/api/"
-
 private const val GALLERY_QUERY = "gallery"
 
 private val moshi = Moshi.Builder()
@@ -25,7 +25,7 @@ private val retrofit = Retrofit.Builder()
 interface ApiService {
     // запрос одной страницы галереи
     @GET(GALLERY_QUERY)
-    fun getGallery(@Query("page") page: String): ApiPlannerProjectResponsePaging
+    fun getGallery(@Query("page") page: String, @Query("sort") sort: String = "editorschoice"): Deferred<ApiPlannerProjectResponsePaging>
 }
 
 object Planner5DApi {

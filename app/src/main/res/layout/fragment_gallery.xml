@@ -5,10 +5,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.android.planner5d.main.GalleryFragment">
 
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.android.planner5d.main.MainViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/galleryFragmentLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/gallery_list"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/margin_width"
+            android:layout_marginEnd="@dimen/margin_width"
+            android:paddingTop="@dimen/standard_grid"
+            android:paddingBottom="@dimen/standard_grid"
+            android:clipToPadding="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
