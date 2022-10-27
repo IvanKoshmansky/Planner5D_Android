@@ -22,7 +22,8 @@ class GalleryPagingSource (private val localRepository: LocalRepository) : Pagin
         val pagesCount = if ((params.loadSize % PAGE_SIZE != 0) || (params.loadSize < PAGE_SIZE)) {
             params.loadSize / PAGE_SIZE + 1
         } else {
-            params.loadSize / PAGE_SIZE }
+            params.loadSize / PAGE_SIZE
+        }
 
         val cachedGallery = localRepository.getCachedGallery(startPage, pagesCount)
         var nextKey: Int? = null
