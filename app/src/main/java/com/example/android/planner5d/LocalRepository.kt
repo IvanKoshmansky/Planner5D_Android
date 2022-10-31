@@ -88,9 +88,8 @@ class LocalRepository @Inject constructor (val localDatabase: LocalDatabase, val
     }
 
     suspend fun getCurrentRoomPlan(projectKey: String): RoomPlanOrError {
-        delay(1000)
-        val roomPlan = RoomPlan("Тест")
-        //return RoomPlanOrError.RoomPlanOk(roomPlan)
-        return RoomPlanOrError.RoomPlanError(java.lang.Exception("Error"))
+        val apiResponse = apiService.getProjectInfo("63ec7dfa77fb62b4c96f9f191410c07f").await()
+        val roomPlan = RoomPlan(apiResponse.items[0].name)
+        return RoomPlanOrError.RoomPlanOk(roomPlan)
     }
 }

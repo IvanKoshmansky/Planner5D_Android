@@ -70,6 +70,7 @@ dependencies {
     // Moshi for parsing the JSON format
     implementation "com.squareup.moshi:moshi:$version_moshi"
     implementation "com.squareup.moshi:moshi-kotlin:$version_moshi"
+    implementation "com.squareup.moshi:moshi-adapters:1.14.0"
 
     // Logging
     implementation "com.jakewharton.timber:timber:$version_timber"
