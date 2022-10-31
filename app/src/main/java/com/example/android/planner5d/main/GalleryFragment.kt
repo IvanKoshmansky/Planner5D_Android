@@ -7,9 +7,11 @@ import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.android.planner5d.R
 import com.example.android.planner5d.databinding.FragmentGalleryBinding
@@ -23,7 +25,7 @@ import timber.log.Timber
 @AndroidEntryPoint
 class GalleryFragment : Fragment() {
 
-    private val mainViewModel: MainViewModel by viewModels()
+    private val mainViewModel: MainViewModel by hiltNavGraphViewModels(R.id.navigation)
     private lateinit var binding: FragmentGalleryBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -40,6 +42,7 @@ class GalleryFragment : Fragment() {
         })
         binding.galleryList.adapter = galleryAdapter
 
+        // TODO: сделать через callback в котором можно измерить размеры layout
         var widthPixels = 0
         var spanCount = 2
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -65,6 +68,15 @@ class GalleryFragment : Fragment() {
                 items.collectLatest {
                     galleryAdapter.submitData(it)
                 }
+            }
+        }
+
+        mainViewModel.navigateToFloorFragment.observe(viewLifecycleOwner) { projectKey ->
+            projectKey?.let {
+                findNavController().navigate(
+                    GalleryFragmentDirections.actionGalleryFragmentToGroundFloorFragment(projectKey)
+                )
+                mainViewModel.navigateToFloorFragmentDone()
             }
         }
 

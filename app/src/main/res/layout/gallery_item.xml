@@ -21,7 +21,8 @@
         android:focusable="true"
         android:layout_margin="@dimen/card_margin"
         app:cardElevation="@dimen/card_elevation"
-        app:contentPadding="@dimen/content_padding">
+        app:contentPadding="@dimen/content_padding"
+        android:onClick="@{() -> clickListener.onClick(item)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

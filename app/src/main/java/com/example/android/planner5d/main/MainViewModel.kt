@@ -1,5 +1,7 @@
 package com.example.android.planner5d.main
 
+import android.os.LocaleList
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -10,8 +12,12 @@ import com.example.android.planner5d.LocalRepository
 import com.example.android.planner5d.PAGE_SIZE
 import com.example.android.planner5d.main.viewpaging.GalleryPagingSource
 import com.example.android.planner5d.models.PlannerProject
+import com.example.android.planner5d.models.RoomPlan
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 // TODO: карточки проектов желательно разместить через GridLayoutManager
@@ -38,6 +44,31 @@ class MainViewModel @Inject constructor(
 
     val galleryItems: Flow<PagingData<PlannerProject>> = pager.flow.cachedIn(viewModelScope)
 
+    private val _floorViewState = MutableStateFlow<LocalRepository.RoomPlanOrError>(
+        LocalRepository.RoomPlanOrError.RoomPlanOk(
+            RoomPlan.fillEmpty())
+    )
+    val floorViewState: StateFlow<LocalRepository.RoomPlanOrError>
+    get() = _floorViewState
+
+    fun setupFloorState(projectKey: String) {
+        viewModelScope.launch {
+            val fromRepo = localRepository.getCurrentRoomPlan(projectKey)
+            _floorViewState.value = fromRepo
+        }
+    }
+
+    // переход на второй фрагмент
+    private val _navigateToFloorFragment = MutableLiveData<String?>()
+
+    val navigateToFloorFragment
+    get() = _navigateToFloorFragment
+
     fun onItemClicked(id: String) {
+        _navigateToFloorFragment.value = id
+    }
+
+    fun navigateToFloorFragmentDone() {
+        _navigateToFloorFragment.value = null
     }
 }
