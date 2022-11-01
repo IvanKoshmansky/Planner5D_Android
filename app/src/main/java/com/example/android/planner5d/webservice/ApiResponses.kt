@@ -126,6 +126,8 @@ data class ApiFloor (
 // данные проекта
 data class ApiProjectData (
     val className: String,     // "Project"
+    val width: Double,         // ширина (предположительно в мм)
+    val height: Double,        // длина (предположительно в мм)
     val items: List<ApiFloor>  // массив этажей
 )
 
