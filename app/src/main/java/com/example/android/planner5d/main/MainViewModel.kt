@@ -12,7 +12,7 @@ import com.example.android.planner5d.LocalRepository
 import com.example.android.planner5d.PAGE_SIZE
 import com.example.android.planner5d.main.viewpaging.GalleryPagingSource
 import com.example.android.planner5d.models.PlannerProject
-import com.example.android.planner5d.models.RoomPlan
+import com.example.android.planner5d.models.FloorPlan
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,7 +46,7 @@ class MainViewModel @Inject constructor(
 
     private val _floorViewState = MutableStateFlow<LocalRepository.RoomPlanOrError>(
         LocalRepository.RoomPlanOrError.RoomPlanOk(
-            RoomPlan.fillEmpty())
+            FloorPlan.fillEmpty())
     )
     val floorViewState: StateFlow<LocalRepository.RoomPlanOrError>
     get() = _floorViewState

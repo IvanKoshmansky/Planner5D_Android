@@ -2,8 +2,8 @@ package com.example.android.planner5d
 
 import com.example.android.planner5d.localdb.LocalDatabase
 import com.example.android.planner5d.localdb.asDomainModel
+import com.example.android.planner5d.models.FloorPlan
 import com.example.android.planner5d.models.PlannerProjectPaging
-import com.example.android.planner5d.models.RoomPlan
 import com.example.android.planner5d.models.asDatabaseModel
 import com.example.android.planner5d.webservice.*
 import kotlinx.coroutines.Dispatchers
@@ -83,17 +83,18 @@ class LocalRepository @Inject constructor (val localDatabase: LocalDatabase, val
     }
 
     sealed class RoomPlanOrError {
-        data class RoomPlanOk (val roomPlan: RoomPlan) : RoomPlanOrError()
+        data class RoomPlanOk (val roomPlan: FloorPlan) : RoomPlanOrError()
         data class RoomPlanError (val e: Exception) : RoomPlanOrError()
     }
 
+    //private suspend fun getCurrentRoomPlan(projectKey: String): RoomPlanOrError {
     suspend fun getCurrentRoomPlan(projectKey: String): RoomPlanOrError {
         try {
             val apiResponse = apiService.getProjectInfo("63ec7dfa77fb62b4c96f9f191410c07f").await()
-            val roomPlan = RoomPlan(apiResponse.items[0].name)
+            val asDomain = apiResponse.asDomainObject()
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        return RoomPlanOrError.RoomPlanOk(RoomPlan.fillEmpty())
+        return RoomPlanOrError.RoomPlanOk(FloorPlan.fillEmpty())
     }
 }

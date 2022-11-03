@@ -1,6 +1,7 @@
 package com.example.android.planner5d.webservice
 
-import com.example.android.planner5d.models.PlannerProjectPaging
+import android.graphics.PointF
+import com.example.android.planner5d.models.*
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -50,7 +51,7 @@ data class ApiWall (
     @Json(name = "w")
     val width: Double,          // ширина (толщина) стены
     @Json(name = "items")
-    val coords: List<ApiPoint>  // список из двух координат (начало и конец отрезка)
+    val coords: List<ApiPoint>  // список из координат для построения стены
 )
 
 // элемент этажа
@@ -119,8 +120,8 @@ sealed class ApiFloorItem {
 
 // этаж
 data class ApiFloor (
-    val className: String,          // "Floor"
-    val items: List<ApiFloorItem>,  // комната/дверь/окно/прочее (3D объект)
+    val className: String,         // "Floor"
+    val items: List<ApiFloorItem>  // комната/дверь/окно/прочее (3D объект)
 )
 
 // данные проекта
@@ -140,4 +141,111 @@ data class ApiPlannerProject (
 // проекты - полный ответ от сервера
 data class ApiPlannerProjectsResponse (
     val items: List<ApiPlannerProject>
-)
+) {
+    // преоборазование в основную модель данных в приложении
+    fun asDomainObject(): FloorPlan {
+        var result = FloorPlan.fillEmpty()
+        if (this.items.isNotEmpty()) {
+            this.items[0].also { plannerProject ->
+                // имя проекта
+                val projectName = plannerProject.name
+                plannerProject.data.also { projectData ->
+                    // размеры проекта
+                    val projectWidth = projectData.width
+                    val projectHeight = projectData.height
+                    if (projectData.items.isNotEmpty()) {
+                        projectData.items[0].also { floor ->
+                            if (floor.items.isNotEmpty()) {
+                                // перебор объектов первого этажа для преобразования 3D -> план 2D
+                                val floorItems = mutableListOf<FloorItem>()
+                                floor.items.forEach { apiFloorItem ->
+                                    val floorItem = parseFloorItem(apiFloorItem)
+                                    // добавляем только not null
+                                    floorItem?.let {
+                                        floorItems.add(it)
+                                    }
+                                }
+                                result = FloorPlan(
+                                    projectName = projectName,
+                                    width = projectWidth,
+                                    height = projectHeight,
+                                    floorItems = listOf(*floorItems.toTypedArray())
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return result
+    }
+
+    // преобразование элемента этажа из 3D формата API в 2D формат плана первого этажа
+    private fun parseFloorItem(apiFloorItem: ApiFloorItem): FloorItem? {
+        var result: FloorItem? = null
+        when (apiFloorItem) {
+            is ApiFloorItem.ApiRoom -> {
+                // комната: преобразовать координаты вершин ломаной линии в координаты
+                // относительно общего начала координат с учетом масштаба
+                val startingPoint = PointF(apiFloorItem.x.toFloat(), apiFloorItem.y.toFloat())
+                val scaleX = apiFloorItem.scaleX.toFloat()
+                val scaleY = apiFloorItem.scaleY.toFloat()
+                var wallWidth = 0.0f
+                val wallsList = mutableListOf<WallItem>()
+                for (apiWall in apiFloorItem.walls) {
+                    wallWidth = apiWall.width.toFloat()
+                    val coordsList = mutableListOf<PointF>()
+                    for (apiCoords in apiWall.coords) {
+                        val point = PointF(
+                            startingPoint.x + apiCoords.x.toFloat() * scaleX / 100.0f,
+                            startingPoint.y + apiCoords.y.toFloat() * scaleY / 100.0f
+                        )
+                        coordsList.add(point)
+                    }
+                    wallsList.add(WallItem(wallWidth, coordsList))
+                }
+                result = FloorItem.RoomItem(wallsList)
+            }
+            is ApiFloorItem.ApiDoor -> {
+                result = parseMeshObject(apiFloorItem)
+            }
+            is ApiFloorItem.ApiWindow -> {
+                result = parseMeshObject(apiFloorItem)
+            }
+            else -> {}
+        }
+        return result
+    }
+
+    // преобразование для двери или окна (стандартная 3D - модель)
+    private fun parseMeshObject(apiFloorItem: ApiFloorItem): FloorItem? {
+        // преобразовать с учетом масштаба и дефолтных размеров двери и окна
+        var result: FloorItem? = null
+        var angle = 0.0f
+        val startingPoint = PointF(0.0f,0.0f)
+        var length = 0.0f
+        var width = 0.0f
+
+        when (apiFloorItem) {
+            is ApiFloorItem.ApiDoor -> {
+                angle = apiFloorItem.angle.toFloat()
+                startingPoint.x = apiFloorItem.x.toFloat()
+                startingPoint.y = apiFloorItem.y.toFloat()
+                length = PLAN_DOOR_LINE_LENGTH_DEFAULT * apiFloorItem.scaleX.toFloat() / 100.0f
+                width = PLAN_DOOR_LINE_WIDTH_DEFAULT
+                result = FloorItem.DoorItem(angle, startingPoint, length, width)
+            }
+            is ApiFloorItem.ApiWindow -> {
+                angle = apiFloorItem.angle.toFloat()
+                startingPoint.x = apiFloorItem.x.toFloat()
+                startingPoint.y = apiFloorItem.y.toFloat()
+                length = PLAN_WINDOW_LINE_LENGTH_DEFAULT * apiFloorItem.scaleX.toFloat() / 100.0f
+                width = PLAN_WINDOW_LINE_WIDTH_DEFAULT
+                result = FloorItem.WindowItem(angle, startingPoint, length, width)
+            }
+            else -> {}
+        }
+
+        return result
+    }
+}
