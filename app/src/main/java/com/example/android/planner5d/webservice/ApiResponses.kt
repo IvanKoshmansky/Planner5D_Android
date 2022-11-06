@@ -167,8 +167,8 @@ data class ApiPlannerProjectsResponse (
                                 }
                                 result = FloorPlan(
                                     projectName = projectName,
-                                    width = projectWidth,
-                                    height = projectHeight,
+                                    width = projectWidth.toFloat(),
+                                    height = projectHeight.toFloat(),
                                     floorItems = listOf(*floorItems.toTypedArray())
                                 )
                             }
@@ -188,8 +188,6 @@ data class ApiPlannerProjectsResponse (
                 // комната: преобразовать координаты вершин ломаной линии в координаты
                 // относительно общего начала координат с учетом масштаба
                 val startingPoint = PointF(apiFloorItem.x.toFloat(), apiFloorItem.y.toFloat())
-                val scaleX = apiFloorItem.scaleX.toFloat()
-                val scaleY = apiFloorItem.scaleY.toFloat()
                 var wallWidth = 0.0f
                 val wallsList = mutableListOf<WallItem>()
                 for (apiWall in apiFloorItem.walls) {
@@ -197,8 +195,8 @@ data class ApiPlannerProjectsResponse (
                     val coordsList = mutableListOf<PointF>()
                     for (apiCoords in apiWall.coords) {
                         val point = PointF(
-                            startingPoint.x + apiCoords.x.toFloat() * scaleX / 100.0f,
-                            startingPoint.y + apiCoords.y.toFloat() * scaleY / 100.0f
+                            startingPoint.x + apiCoords.x.toFloat(),
+                            startingPoint.y + apiCoords.y.toFloat(),
                         )
                         coordsList.add(point)
                     }

@@ -6,9 +6,10 @@ import com.example.android.planner5d.models.FloorPlan
 import com.example.android.planner5d.models.PlannerProjectPaging
 import com.example.android.planner5d.models.asDatabaseModel
 import com.example.android.planner5d.webservice.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import timber.log.Timber
 import javax.inject.Inject
 
 //
@@ -82,19 +83,51 @@ class LocalRepository @Inject constructor (val localDatabase: LocalDatabase, val
         }
     }
 
-    sealed class RoomPlanOrError {
-        data class RoomPlanOk (val roomPlan: FloorPlan) : RoomPlanOrError()
-        data class RoomPlanError (val e: Exception) : RoomPlanOrError()
+    sealed class RoomPlanFromRepo {
+        data class RoomPlanLoading (val percent: Int): RoomPlanFromRepo()
+        data class RoomPlanOk (val roomPlan: FloorPlan) : RoomPlanFromRepo()
+        data class RoomPlanError (val e: Exception) : RoomPlanFromRepo()
     }
 
-    //private suspend fun getCurrentRoomPlan(projectKey: String): RoomPlanOrError {
-    suspend fun getCurrentRoomPlan(projectKey: String): RoomPlanOrError {
+    private suspend fun getRoomPlanFromServer(projectKey: String): RoomPlanFromRepo {
+        Timber.d("debug_regex: начата загрузка плана с сервера")
+        var floorPlan: FloorPlan? = null
         try {
-            val apiResponse = apiService.getProjectInfo("63ec7dfa77fb62b4c96f9f191410c07f").await()
-            val asDomain = apiResponse.asDomainObject()
+            val apiResponse = apiService.getProjectInfo(projectKey).await()
+            floorPlan = apiResponse.asDomainObject()
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        return RoomPlanOrError.RoomPlanOk(FloorPlan.fillEmpty())
+        //delay(5000)
+        Timber.d("debug_regex: загружен план $floorPlan")
+        return if (floorPlan != null) {
+            RoomPlanFromRepo.RoomPlanOk(floorPlan)
+        } else {
+            RoomPlanFromRepo.RoomPlanError(java.lang.Exception("unable to get room plan"))
+        }
+    }
+
+    // StateFlow требует значение по умолчанию (здесь - пустой план)
+    private val _floorStateFlow = MutableStateFlow<RoomPlanFromRepo>(
+        RoomPlanFromRepo.RoomPlanOk(FloorPlan.fillEmpty())
+    )
+    val floorStateFlow: StateFlow<RoomPlanFromRepo> = _floorStateFlow
+
+    fun setupFloorState(projectKey: String, externalScope: CoroutineScope) {
+        externalScope.launch {
+            // поскольку подгрузка идет не внутри билдера Flow {}
+            // то flowOn() для переключения диспетчера не нужна (можно использовать withContext())
+            // первый шаг - состояние загрузки
+            _floorStateFlow.value = RoomPlanFromRepo.RoomPlanLoading(50)
+            Timber.d("debug_regex: stateFlow <- состояние загрузки 50%")
+            withContext(Dispatchers.IO) {
+                // блок withContext() не создает новую корутину
+                // он выполняет последовательно код в новом контексте (при смене диспетчера в новом потоке)
+                // и затем возвращается к предыдущему контексту
+                // второй шаг - загрузка завершена
+                _floorStateFlow.value = getRoomPlanFromServer(projectKey)
+                Timber.d("debug_regex: stateFlow <- новый план 100%")
+            }
+        }
     }
 }

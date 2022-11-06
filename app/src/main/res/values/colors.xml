@@ -7,4 +7,8 @@
     <color name="color_accent">#F290D6</color>
     <color name="color_on_primary">#000000</color>
     <color name="color_on_secondary">#000000</color>
+    <color name="color_floor_background">#F0F0F0</color>
+    <color name="color_floor_walls">#C0A000</color>
+    <color name="color_floor_doors">#A0A0A0</color>
+    <color name="color_floor_windows">#A0A0FF</color>
 </resources>

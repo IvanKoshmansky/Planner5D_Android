@@ -15,23 +15,35 @@ import com.example.android.planner5d.R
 import com.example.android.planner5d.databinding.FragmentFloorBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class FloorFragment : Fragment() {
 
     private val mainViewModel: MainViewModel by hiltNavGraphViewModels(R.id.navigation)
+    private lateinit var binding: FragmentFloorBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        val binding: FragmentFloorBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_floor,
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_floor,
             container, false)
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // запускать новую корутину всегда когда наступает состояние STARTED
+                // и останавливать ее когда наступает состояние STOPPED
                 mainViewModel.floorViewState.collect { uiState ->
+                    // Flow сохраняет контекст корутины из которой был запущен (context preservation)
+                    // при запуске во lifecycleScope и viewModelScope диспетчер Main
+                    // поэтому отсюда обновлять UI можно
+                    // первый элемент, который сюда поступает - значение по умолчанию
+                    // далее StateFlow всегда хранит последний сохраненный элемент и передает его здесь
+                    Timber.d("debug_regex: обновить UI $uiState")
+                    Timber.d("debug_regex: элемент принят в $coroutineContext")
                     when (uiState) {
-                        is LocalRepository.RoomPlanOrError.RoomPlanOk -> showRoomPlanOk()
-                        is LocalRepository.RoomPlanOrError.RoomPlanError -> showRoomPlanError()
+                        is LocalRepository.RoomPlanFromRepo.RoomPlanLoading -> showRoomPlanLoading()
+                        is LocalRepository.RoomPlanFromRepo.RoomPlanOk -> showRoomPlanOk(uiState)
+                        is LocalRepository.RoomPlanFromRepo.RoomPlanError -> showRoomPlanError()
                     }
                 }
             }
@@ -40,12 +52,16 @@ class FloorFragment : Fragment() {
         return binding.root
     }
 
-    private fun showRoomPlanOk() {
+    private fun showRoomPlanLoading() {
+        binding.textView.text = "загрузка"
+    }
 
+    private fun showRoomPlanOk(plan: LocalRepository.RoomPlanFromRepo.RoomPlanOk) {
+        binding.textView.text = plan.roomPlan.projectName
+        binding.floorView.setFloorPlan(plan.roomPlan)
     }
 
     private fun showRoomPlanError() {
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

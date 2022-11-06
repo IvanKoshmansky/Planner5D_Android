@@ -17,7 +17,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 // TODO: карточки проектов желательно разместить через GridLayoutManager
@@ -44,18 +46,11 @@ class MainViewModel @Inject constructor(
 
     val galleryItems: Flow<PagingData<PlannerProject>> = pager.flow.cachedIn(viewModelScope)
 
-    private val _floorViewState = MutableStateFlow<LocalRepository.RoomPlanOrError>(
-        LocalRepository.RoomPlanOrError.RoomPlanOk(
-            FloorPlan.fillEmpty())
-    )
-    val floorViewState: StateFlow<LocalRepository.RoomPlanOrError>
-    get() = _floorViewState
+    val floorViewState = localRepository.floorStateFlow
 
     fun setupFloorState(projectKey: String) {
-        viewModelScope.launch {
-            val fromRepo = localRepository.getCurrentRoomPlan(projectKey)
-            _floorViewState.value = fromRepo
-        }
+        Timber.d("debug_regex: обращение к репозиторию")
+        localRepository.setupFloorState(projectKey, viewModelScope)
     }
 
     // переход на второй фрагмент
