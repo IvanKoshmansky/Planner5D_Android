@@ -7,26 +7,31 @@ import com.example.android.planner5d.R
 import com.example.android.planner5d.models.FloorItem
 import com.example.android.planner5d.models.FloorPlan
 
-// TODO: проверить почему при малом масштабе исчезают линии
-private const val WALLS_WIDTH_COEFF = 2.0f
+// TODO: разобраться почему при уменьшении линии полностью пропадают
 
 class Painter (
     private val paint: Paint,
     resources: Resources,
 ) {
-    var floorPlan: FloorPlan? = null
-    set (value) {
-        field = value
-        userScale = 0.75f   // изображение вписано по охватывающеу прямоугольнику
-        userOffsetX = 0.0f  // относительно центра
-        userOffsetY = 0.0f
+    private var floorPlan: FloorPlan? = null
+    private var _viewPort: ViewPort? = null
+    private val viewPort: ViewPort
+        get() = _viewPort ?: ViewPort.createDefault()
+
+    fun submitData(floorPlan: FloorPlan, viewPort: ViewPort) {
+        this.floorPlan = floorPlan
+        this._viewPort = viewPort
         calculateScales()
     }
 
-    var viewWidth: Int = 0
-    private set
-    var viewHeight: Int = 0
-    private set
+    fun submitData(viewPort: ViewPort) {
+        this._viewPort = viewPort
+        calculateScales()
+    }
+
+    private var viewWidth: Int = 0
+    private var viewHeight: Int = 0
+
     fun setViewBounds(width: Int, height: Int) {
         viewWidth = width
         viewHeight = height
@@ -37,10 +42,6 @@ class Painter (
     private var viewScale = 1.0f
     private var offsetX = 0.0f  // в оригинальных единицах измерения
     private var offsetY = 0.0f
-
-    private var userScale: Float = 0.75f   // zoomIn / zoomOut
-    private var userOffsetX: Float = 0.0f  // просчитывается в системе координат проекта
-    private var userOffsetY: Float = 0.0f
 
     private val backgroundColor = ResourcesCompat.getColor(resources, R.color.color_floor_background, null)
     private val wallsColor = ResourcesCompat.getColor(resources, R.color.color_floor_walls, null)
@@ -61,8 +62,8 @@ class Painter (
                 (enclosingRect.left + (enclosingRect.right - enclosingRect.left) / 2),
                 (enclosingRect.top + (enclosingRect.bottom - enclosingRect.top) / 2)
             )
-            offsetX = planCenterOrigin.x - (viewCenter.x / (viewScale * userScale)) + userOffsetX
-            offsetY = planCenterOrigin.y - (viewCenter.y / (viewScale * userScale)) + userOffsetY
+            offsetX = planCenterOrigin.x - (viewCenter.x / (viewScale * viewPort.scale)) + viewPort.offset.x
+            offsetY = planCenterOrigin.y - (viewCenter.y / (viewScale * viewPort.scale)) + viewPort.offset.y
         }
     }
 
@@ -71,7 +72,7 @@ class Painter (
         if ((viewWidth > 0) && (viewHeight > 0)) {
             floorPlan?.let { floor ->
                 if ((floor.width > 0) && (floor.height > 0)) {
-                    canvas.scale(viewScale * userScale, viewScale * userScale)
+                    canvas.scale(viewScale * viewPort.scale, viewScale * viewPort.scale)
                     canvas.translate((-1) * offsetX, (-1) * offsetY)
                     result = true
                 }
@@ -102,7 +103,7 @@ class Painter (
                     if (item.walls.isNotEmpty()) {
                         item.walls.forEach { wall ->
                             if (wall.coords.isNotEmpty()) {
-                                paint.strokeWidth = wall.width * WALLS_WIDTH_COEFF
+                                paint.strokeWidth = wall.width
                                 path.reset()
                                 path.moveTo(wall.coords[0].x, wall.coords[0].y)
                                 for (idx in 1 until wall.coords.size) {

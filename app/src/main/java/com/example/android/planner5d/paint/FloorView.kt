@@ -25,19 +25,14 @@ class FloorView @JvmOverloads constructor (
         resources
     )
 
-    // задать для инициирования перерисовки
-    fun setFloorPlan(floorPlan: FloorPlan) {
-        painter.floorPlan = floorPlan
+    fun submitViewPort(viewPort: ViewPort) {
+        painter.submitData(viewPort)
         invalidate()
     }
 
-    fun move(dx: Float, dy: Float) {
-    }
-
-    fun zoomIn() {
-    }
-
-    fun zoomOut() {
+    fun submitData(floorPlan: FloorPlan, viewPort: ViewPort) {
+        painter.submitData(floorPlan, viewPort)
+        invalidate()
     }
 
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {

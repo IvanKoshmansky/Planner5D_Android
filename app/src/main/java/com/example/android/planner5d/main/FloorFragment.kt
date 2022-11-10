@@ -28,6 +28,9 @@ class FloorFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_floor,
             container, false)
 
+        binding.lifecycleOwner = viewLifecycleOwner  // не забывать
+        binding.viewModel = mainViewModel  // не забывать
+
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 // запускать новую корутину всегда когда наступает состояние STARTED
@@ -49,6 +52,13 @@ class FloorFragment : Fragment() {
             }
         }
 
+        mainViewModel.updateViewPortFlag.observe(viewLifecycleOwner) {
+            if (it == true) {
+                binding.floorView.submitViewPort(mainViewModel.viewPort)
+                mainViewModel.viewPortUpdated()
+            }
+        }
+
         return binding.root
     }
 
@@ -58,15 +68,17 @@ class FloorFragment : Fragment() {
 
     private fun showRoomPlanOk(plan: LocalRepository.RoomPlanFromRepo.RoomPlanOk) {
         binding.textView.text = plan.roomPlan.projectName
-        binding.floorView.setFloorPlan(plan.roomPlan)
+        binding.floorView.submitData(plan.roomPlan, mainViewModel.viewPort)
     }
 
     private fun showRoomPlanError() {
+        binding.textView.text = "ошибка"
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (savedInstanceState == null) {
+            // первое создание фрагмента (не смена конфигурации)
             val args = FloorFragmentArgs.fromBundle(requireArguments())
             mainViewModel.setupFloorState(args.projectKey)
         }

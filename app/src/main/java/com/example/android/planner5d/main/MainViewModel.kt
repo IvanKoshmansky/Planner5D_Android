@@ -1,6 +1,6 @@
 package com.example.android.planner5d.main
 
-import android.os.LocaleList
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,24 +12,11 @@ import com.example.android.planner5d.LocalRepository
 import com.example.android.planner5d.PAGE_SIZE
 import com.example.android.planner5d.main.viewpaging.GalleryPagingSource
 import com.example.android.planner5d.models.PlannerProject
-import com.example.android.planner5d.models.FloorPlan
+import com.example.android.planner5d.paint.ViewPort
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
-
-// TODO: карточки проектов желательно разместить через GridLayoutManager
-// каждый новый проект можно открывать в новой активити и там уже при необходимости
-// делать навигацию по этажам
-// TODO: на фрагменте для просмотра планировки нужно сделать поддержку жестов:
-// растянуть-сжать и движением пальцем
-// плюс две FAB кнопки: увеличить и уменьшить
-
-// ViewModel, которая используется для обзора проектов
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -48,9 +35,19 @@ class MainViewModel @Inject constructor(
 
     val floorViewState = localRepository.floorStateFlow
 
+    val viewPort = ViewPort.createDefault()
+
+    private val _updateViewPortFlag = MutableLiveData<Boolean>()
+    val updateViewPortFlag = _updateViewPortFlag
+
+    fun viewPortUpdated() {
+        _updateViewPortFlag.value = false
+    }
+
     fun setupFloorState(projectKey: String) {
         Timber.d("debug_regex: обращение к репозиторию")
-        localRepository.setupFloorState(projectKey, viewModelScope)
+        viewPort.setDefault()                                        // значение по-умолчанию
+        localRepository.setupFloorState(projectKey, viewModelScope)  // асинхронный запрос, результат в floorStateFlow
     }
 
     // переход на второй фрагмент
@@ -65,5 +62,17 @@ class MainViewModel @Inject constructor(
 
     fun navigateToFloorFragmentDone() {
         _navigateToFloorFragment.value = null
+    }
+
+    // увеличить масштаб
+    fun zoomIn() {
+        viewPort.zoomIn()
+        _updateViewPortFlag.value = true
+    }
+
+    // уменьшить масштаб
+    fun zoomOut() {
+        viewPort.zoomOut()
+        _updateViewPortFlag.value = true
     }
 }
