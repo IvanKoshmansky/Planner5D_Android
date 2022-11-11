@@ -7,8 +7,6 @@ import com.example.android.planner5d.R
 import com.example.android.planner5d.models.FloorItem
 import com.example.android.planner5d.models.FloorPlan
 
-// TODO: разобраться почему при уменьшении линии полностью пропадают
-
 class Painter (
     private val paint: Paint,
     resources: Resources,
@@ -82,8 +80,9 @@ class Painter (
     }
 
     private fun drawBackground(canvas: Canvas) {
-        paint.color = backgroundColor
         paint.style = Paint.Style.FILL
+        paint.strokeCap = Paint.Cap.ROUND
+        paint.color = backgroundColor
         canvas.drawRect(
             RectF().apply {
                 left = 0.0f
@@ -95,8 +94,9 @@ class Painter (
     }
 
     private fun drawWalls(canvas: Canvas) {
-        paint.color = wallsColor
         paint.style = Paint.Style.STROKE
+        paint.strokeCap = Paint.Cap.ROUND
+        paint.color = wallsColor
         floorPlan?.let { plan ->
             plan.floorItems.forEach { item ->
                 if (item is FloorItem.RoomItem) {
@@ -118,8 +118,28 @@ class Painter (
         }
     }
 
-    private fun drawDoorsAndWindows(canvas: Canvas) {
-
+    private fun drawMeshObjects(canvas: Canvas) {
+        paint.style = Paint.Style.STROKE
+        paint.strokeCap = Paint.Cap.SQUARE
+        floorPlan?.let { plan ->
+            plan.floorItems.forEach { item ->
+                if (item is FloorItem.MeshObject) {
+                    when (item) {
+                        is FloorItem.MeshObject.DoorItem -> {
+                            paint.color = doorsColor
+                        }
+                        is FloorItem.MeshObject.WindowItem -> {
+                            paint.color = windowsColor
+                        }
+                    }
+                    paint.strokeWidth = item.lineWidth
+                    path.reset()
+                    path.moveTo(item.coordStart.x, item.coordStart.y)
+                    path.lineTo(item.coordEnd.x, item.coordEnd.y)
+                    canvas.drawPath(path, paint)
+                }
+            }
+        }
     }
 
     fun draw(canvas: Canvas) {
@@ -127,7 +147,7 @@ class Painter (
         if (setCanvasArea(canvas)) {
             drawBackground(canvas)
             drawWalls(canvas)
-            drawDoorsAndWindows(canvas)
+            drawMeshObjects(canvas)
         }
         canvas.restore()
     }

@@ -130,4 +130,10 @@ class LocalRepository @Inject constructor (val localDatabase: LocalDatabase, val
             }
         }
     }
+
+    suspend fun clearLocalGallery() {
+        withContext(Dispatchers.IO) {
+            localDatabase.databaseDao.clearGallery()
+        }
+    }
 }

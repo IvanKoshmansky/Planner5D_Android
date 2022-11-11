@@ -3,32 +3,41 @@ package com.example.android.planner5d.models
 import android.graphics.PointF
 import android.graphics.RectF
 
-const val PLAN_DOOR_LINE_LENGTH_DEFAULT = 800.0f     // длина отрезка двери на плане по умолчанию
-const val PLAN_WINDOW_LINE_LENGTH_DEFAULT = 1200.0f  // длина отрезка окна на плане по умолчанию
-const val PLAN_DOOR_LINE_WIDTH_DEFAULT = 10.0f
-const val PLAN_WINDOW_LINE_WIDTH_DEFAULT = 10.0f
+const val PLAN_DOOR_LINE_LENGTH_DEFAULT = 100.0f    // длина условного отрезка двери на плане по умолчанию (для точных размеров нужна 3D модель)
+const val PLAN_WINDOW_LINE_LENGTH_DEFAULT = 100.0f  // длина условного отрезка окна на плане по умолчанию
+const val PLAN_DOOR_LINE_WIDTH_DEFAULT = 20.0f
+const val PLAN_WINDOW_LINE_WIDTH_DEFAULT = 20.0f
 
 data class WallItem (
     val width: Float,         // ширина (толщина) стены
     val coords: List<PointF>  // список точек для построения ломаной линии или отрезка
 )
 
+// базовый тип для описания элемента этажа с расширениями (FloorItem - абстрактный)
 sealed class FloorItem {
-    data class RoomItem (
+    // тип для описания комнаты (стены)
+    class RoomItem (
         val walls: List<WallItem>  // список стен, координаты стен в общей системе координат
     ): FloorItem()
-    data class DoorItem (
-        val angle: Float,          // угол поворота
-        val coord: PointF,         // координата начала
-        val vectorLength: Float,   // длина отрезка
-        val vectorWidth: Float,    // ширина отрезка
-    ): FloorItem()
-    data class WindowItem (
-        val angle: Float,          // угол поворота
-        val coord: PointF,         // координата начала
-        val vectorLength: Float,   // длина отрезка
-        val vectorWidth: Float,    // ширина отрезка
-    ): FloorItem()
+    // базовый тип для дверей, окон и произвольных 3D объектов
+    sealed class MeshObject (
+        val coordStart: PointF,
+        val coordEnd: PointF,
+        val lineWidth: Float,
+    ): FloorItem() {
+        // тип для описания двери
+        class DoorItem constructor (
+            _coordStart: PointF,
+            _coordEnd: PointF,
+            _lineWidth: Float
+        ): MeshObject(_coordStart, _coordEnd, _lineWidth)
+        // тип для описания окна
+        class WindowItem constructor (
+            _coordStart: PointF,
+            _coordEnd: PointF,
+            _lineWidth: Float
+        ): MeshObject(_coordStart, _coordEnd, _lineWidth)
+    }
 }
 
 data class FloorPlan (

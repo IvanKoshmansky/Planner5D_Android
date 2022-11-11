@@ -15,6 +15,7 @@ import com.example.android.planner5d.models.PlannerProject
 import com.example.android.planner5d.paint.ViewPort
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -35,18 +36,25 @@ class MainViewModel @Inject constructor(
 
     val floorViewState = localRepository.floorStateFlow
 
+    private val _needToRefreshAdapter = MutableLiveData<Boolean>()
+    val needToRefreshAdapter
+        get() = _needToRefreshAdapter
+    fun needToRefreshAdapterReset() {
+        _needToRefreshAdapter.value = false
+    }
+
     val viewPort = ViewPort.createDefault()
 
-    private val _updateViewPortFlag = MutableLiveData<Boolean>()
-    val updateViewPortFlag = _updateViewPortFlag
+    private val _updateViewPort = MutableLiveData<Boolean>()
+    val updateViewPort: LiveData<Boolean> = _updateViewPort
 
     fun viewPortUpdated() {
-        _updateViewPortFlag.value = false
+        _updateViewPort.value = false
     }
 
     fun setupFloorState(projectKey: String) {
         Timber.d("debug_regex: обращение к репозиторию")
-        viewPort.setDefault()                                        // значение по-умолчанию
+        viewPort.setDefault()  // значение по-умолчанию
         localRepository.setupFloorState(projectKey, viewModelScope)  // асинхронный запрос, результат в floorStateFlow
     }
 
@@ -67,12 +75,19 @@ class MainViewModel @Inject constructor(
     // увеличить масштаб
     fun zoomIn() {
         viewPort.zoomIn()
-        _updateViewPortFlag.value = true
+        _updateViewPort.value = true
     }
 
     // уменьшить масштаб
     fun zoomOut() {
         viewPort.zoomOut()
-        _updateViewPortFlag.value = true
+        _updateViewPort.value = true
+    }
+
+    fun clearLocalGallery() {
+        viewModelScope.launch {
+            localRepository.clearLocalGallery()
+            _needToRefreshAdapter.value = true
+        }
     }
 }

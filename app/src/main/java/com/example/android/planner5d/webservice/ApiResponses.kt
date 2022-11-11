@@ -2,6 +2,7 @@ package com.example.android.planner5d.webservice
 
 import android.graphics.PointF
 import com.example.android.planner5d.models.*
+import com.example.android.planner5d.nextPoint
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -215,31 +216,34 @@ data class ApiPlannerProjectsResponse (
         return result
     }
 
-    // преобразование для двери или окна (стандартная 3D - модель)
+    // преобразование для двери или окна
     private fun parseMeshObject(apiFloorItem: ApiFloorItem): FloorItem? {
         // преобразовать с учетом масштаба и дефолтных размеров двери и окна
         var result: FloorItem? = null
+        val centerPoint = PointF(0.0f, 0.0f)
+        var baseAngle = 0.0f
         var angle = 0.0f
-        val startingPoint = PointF(0.0f,0.0f)
-        var length = 0.0f
-        var width = 0.0f
 
         when (apiFloorItem) {
             is ApiFloorItem.ApiDoor -> {
-                angle = apiFloorItem.angle.toFloat()
-                startingPoint.x = apiFloorItem.x.toFloat()
-                startingPoint.y = apiFloorItem.y.toFloat()
-                length = PLAN_DOOR_LINE_LENGTH_DEFAULT * apiFloorItem.scaleX.toFloat() / 100.0f
-                width = PLAN_DOOR_LINE_WIDTH_DEFAULT
-                result = FloorItem.DoorItem(angle, startingPoint, length, width)
+                centerPoint.x = apiFloorItem.x.toFloat()
+                centerPoint.y = apiFloorItem.y.toFloat()
+                baseAngle = apiFloorItem.angle.toFloat()
+                angle = baseAngle + 90.0f
+                val pointStart = centerPoint.nextPoint(PLAN_DOOR_LINE_LENGTH_DEFAULT / 2, angle)
+                angle = baseAngle - 90.0f
+                val pointEnd = centerPoint.nextPoint(PLAN_DOOR_LINE_LENGTH_DEFAULT / 2, angle)
+                result = FloorItem.MeshObject.DoorItem(pointStart, pointEnd, PLAN_DOOR_LINE_WIDTH_DEFAULT)
             }
             is ApiFloorItem.ApiWindow -> {
-                angle = apiFloorItem.angle.toFloat()
-                startingPoint.x = apiFloorItem.x.toFloat()
-                startingPoint.y = apiFloorItem.y.toFloat()
-                length = PLAN_WINDOW_LINE_LENGTH_DEFAULT * apiFloorItem.scaleX.toFloat() / 100.0f
-                width = PLAN_WINDOW_LINE_WIDTH_DEFAULT
-                result = FloorItem.WindowItem(angle, startingPoint, length, width)
+                centerPoint.x = apiFloorItem.x.toFloat()
+                centerPoint.y = apiFloorItem.y.toFloat()
+                baseAngle = apiFloorItem.angle.toFloat()
+                angle = baseAngle + 90.0f
+                val pointStart = centerPoint.nextPoint(PLAN_WINDOW_LINE_LENGTH_DEFAULT / 2, angle)
+                angle = baseAngle - 90.0f
+                val pointEnd = centerPoint.nextPoint(PLAN_WINDOW_LINE_LENGTH_DEFAULT / 2, angle)
+                result = FloorItem.MeshObject.WindowItem(pointStart, pointEnd, PLAN_WINDOW_LINE_WIDTH_DEFAULT)
             }
             else -> {}
         }

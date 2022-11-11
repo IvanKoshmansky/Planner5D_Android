@@ -2,4 +2,7 @@
     <string name="app_name">Planner5D</string>
     <string name="fragment_gallery_header">Галерея</string>
     <string name="fragment_ground_floor_header">План первого этажа</string>
+    <string name="text_message_loading">Загрузка.....</string>
+    <string name="text_message_error">Ошибка</string>
+    <string name="main_menu_sync">Синхронизовать</string>
 </resources>

@@ -29,7 +29,7 @@ class FloorFragment : Fragment() {
             container, false)
 
         binding.lifecycleOwner = viewLifecycleOwner  // не забывать
-        binding.viewModel = mainViewModel  // не забывать
+        binding.viewModel = mainViewModel            // не забывать
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -52,8 +52,8 @@ class FloorFragment : Fragment() {
             }
         }
 
-        mainViewModel.updateViewPortFlag.observe(viewLifecycleOwner) {
-            if (it == true) {
+        mainViewModel.updateViewPort.observe(viewLifecycleOwner) {
+            if (it) {
                 binding.floorView.submitViewPort(mainViewModel.viewPort)
                 mainViewModel.viewPortUpdated()
             }
@@ -63,16 +63,16 @@ class FloorFragment : Fragment() {
     }
 
     private fun showRoomPlanLoading() {
-        binding.textView.text = "загрузка"
+        binding.twProjectName.text = getText(R.string.text_message_loading)
     }
 
     private fun showRoomPlanOk(plan: LocalRepository.RoomPlanFromRepo.RoomPlanOk) {
-        binding.textView.text = plan.roomPlan.projectName
+        binding.twProjectName.text = plan.roomPlan.projectName
         binding.floorView.submitData(plan.roomPlan, mainViewModel.viewPort)
     }
 
     private fun showRoomPlanError() {
-        binding.textView.text = "ошибка"
+        binding.twProjectName.text = getText(R.string.text_message_error)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

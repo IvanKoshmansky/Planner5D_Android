@@ -9,6 +9,6 @@
     <color name="color_on_secondary">#000000</color>
     <color name="color_floor_background">#F0F0F0</color>
     <color name="color_floor_walls">#C0A000</color>
-    <color name="color_floor_doors">#A0A0A0</color>
+    <color name="color_floor_doors">#805020</color>
     <color name="color_floor_windows">#A0A0FF</color>
 </resources>
