@@ -54,7 +54,7 @@ class FloorFragment : Fragment() {
 
         mainViewModel.updateViewPort.observe(viewLifecycleOwner) {
             if (it) {
-                binding.floorView.submitViewPort(mainViewModel.viewPort)
+                binding.floorView.setViewPort(mainViewModel.viewPort)
                 mainViewModel.viewPortUpdated()
             }
         }

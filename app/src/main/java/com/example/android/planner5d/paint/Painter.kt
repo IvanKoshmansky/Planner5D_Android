@@ -22,9 +22,18 @@ class Painter (
         calculateScales()
     }
 
-    fun submitData(viewPort: ViewPort) {
+    fun setViewPort(viewPort: ViewPort) {
         this._viewPort = viewPort
         calculateScales()
+    }
+
+    fun moveViewPort(distanceX: Float, distanceY: Float) {
+        _viewPort?.let {
+            val scale = it.scale
+            it.offset.x += distanceX / (viewScale * scale)
+            it.offset.y += distanceY / (viewScale * scale)
+            calculateScales()
+        }
     }
 
     private var viewWidth: Int = 0
